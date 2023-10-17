@@ -12,3 +12,24 @@ List periodic journals:
 # List weekly journal of today
 noteutil ls --journal-only --date today --period weekly
 ```
+
+### As Vim Plugin
+
+To use with vim plugin, simply clone this repo under your
+`.vim/pack/*/start`. You can also use your favorite plugin manager. For
+example,
+
+```vim
+# https://github.com/k-takata/minpac
+call minpac#add(
+    \ 'https://github.com/igxlin/noteutil', 
+    \ {'do': { -> noteutil#install() })
+```
+
+It is very easy to create your own commands to put the filtered result
+into quickfix window.
+
+```vim
+command! NoteutilToday call noteutil#quickfix(
+                \ 'ls --journal-only --date today')
+```
