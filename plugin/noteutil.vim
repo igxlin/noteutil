@@ -3,6 +3,8 @@ if exists('g:loaded_noteutil')
 endif
 let g:loaded_noteutil = 1
 
+let s:note_dir = get(g:, 'noteutil_note_dir', getcwd())
+
 let s:prog = 'noteutil'
 let s:base_dir = expand('<sfile>:h:h')
 
@@ -23,7 +25,7 @@ function! noteutil#install()
 endfunction
 
 function! noteutil#exec(args) abort
-    return systemlist('noteutil ' . a:args)
+    return systemlist(join([s:prog, a:args, s:note_dir]))
 endfunction
 
 function! noteutil#quickfix(args) abort

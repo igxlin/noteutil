@@ -30,6 +30,7 @@ It is very easy to create your own commands to put the filtered result
 into quickfix window.
 
 ```vim
+let g:noteutil_note_dir = 'path/to/notes'
 command! NoteutilToday call noteutil#quickfix(
                 \ 'ls --journal-only --date today')
 ```
