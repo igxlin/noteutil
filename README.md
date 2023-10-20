@@ -6,10 +6,17 @@ your own risk.
 
 ## Usage
 
+Get expected paths of journals. The path can be used to generated files
+or to find related journals.
+
+```bash
+noteutil journal --period daily --date today
+```
+
 List periodic journals:
 
 ```bash
-# List weekly journal of today
+# List weekly journal of today in directory
 noteutil ls --journal-only --date today --period weekly path/to/notes
 ```
 

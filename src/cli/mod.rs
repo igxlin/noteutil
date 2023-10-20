@@ -1,6 +1,8 @@
 use clap::Parser;
 use std::path::PathBuf;
 
+mod date;
+mod journal;
 mod list;
 
 #[derive(clap::Parser)]
@@ -17,6 +19,8 @@ pub struct Cli {
 enum Commands {
     #[command(name = "ls")]
     List(list::Args),
+
+    Journal(journal::Args),
 }
 
 pub fn run() {
@@ -25,6 +29,9 @@ pub fn run() {
     match &cli.command {
         Some(Commands::List(args)) => {
             list::run(&cli, args);
+        }
+        Some(Commands::Journal(args)) => {
+            journal::run(&cli, args);
         }
         None => {}
     }

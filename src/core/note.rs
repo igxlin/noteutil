@@ -1,26 +1,21 @@
 use std::path::PathBuf;
 
-#[derive(Clone, Debug, clap::ValueEnum)]
-pub enum JournalPeriod {
-    All,
-    Daily,
-    Weekly,
-}
+use crate::core::journal;
 
 pub struct Filter {
     paths: Vec<PathBuf>,
-    period: JournalPeriod,
+    period: journal::Period,
 }
 
 impl Filter {
     pub fn new() -> Self {
         Self {
             paths: Vec::new(),
-            period: JournalPeriod::All,
+            period: journal::Period::All,
         }
     }
 
-    pub fn period(mut self, period: JournalPeriod) -> Self {
+    pub fn period(mut self, period: journal::Period) -> Self {
         self.period = period;
         self
     }
@@ -57,23 +52,25 @@ impl Filter {
     }
 
     pub fn date(mut self, date: &chrono::NaiveDate) -> Self {
-        let patterns: Vec<String>;
-        let daily_patterns = vec![date.format("%Y-%m-%d").to_string()];
-        let weekly_patterns = vec![date.format("%Y-w%U").to_string()];
-        match self.period {
-            JournalPeriod::Daily => {
-                patterns = daily_patterns;
+        let daily_pattern = date.format("%Y-%m-%d").to_string();
+        let weekly_pattern = date.format("%Y-w%U").to_string();
+        let monthly_pattern = date.format("%Y-%m").to_string();
+        let yearly_pattern = date.format("%Y").to_string();
+
+        let patterns = match self.period {
+            journal::Period::Daily => vec![daily_pattern],
+            journal::Period::Weekly => vec![weekly_pattern],
+            journal::Period::Monthly => vec![monthly_pattern],
+            journal::Period::Yearly => vec![yearly_pattern],
+            journal::Period::All => {
+                vec![
+                    daily_pattern,
+                    weekly_pattern,
+                    monthly_pattern,
+                    yearly_pattern,
+                ]
             }
-            JournalPeriod::Weekly => {
-                patterns = weekly_patterns;
-            }
-            JournalPeriod::All => {
-                let mut pat = Vec::new();
-                pat.extend_from_slice(&daily_patterns);
-                pat.extend_from_slice(&weekly_patterns);
-                patterns = pat;
-            }
-        }
+        };
 
         let mut paths = Vec::new();
         for path in self.paths {
