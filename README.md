@@ -31,6 +31,6 @@ into quickfix window.
 
 ```vim
 let g:noteutil_note_dir = 'path/to/notes'
-command! NoteutilToday call noteutil#quickfix(
-                \ 'ls --journal-only --date today')
+command! NoteutilToday call noteutil#open(
+                \ 'journal --date today')
 ```
