@@ -39,8 +39,7 @@ function! noteutil#open(cmd_args, ...) abort
     endif
     let l:output = noteutil#exec(join(l:cmd_args))
 
-    call s:quickfix_populate(l:output)
-    call s:quickfix_toggle()
+    call s:quickfix_populate(l:output, {'jump': v:true})
 endfunction
 
 function! s:warn(msg) abort
@@ -51,10 +50,14 @@ function! s:warn(msg) abort
     echohl None
 endfunction
 
-function! s:quickfix_populate(data) abort
+function! s:quickfix_populate(data, ...) abort
+    let l:opt = extend(copy(get(a:000, 0, {})), {
+                \ 'jump': v:false,
+                \ }, 'keep')
+
     let l:efm = &errorformat
     set errorformat=%f
-    execute 'cgetexpr' 'a:data'
+    execute (l:opt.jump ? 'cexpr' : 'cgetexpr') 'a:data'
     let &errorformat = l:efm
 endfunction
 
