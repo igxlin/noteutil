@@ -2,21 +2,21 @@ use std::path::PathBuf;
 
 use crate::core::journal;
 
-pub struct Filter {
+pub struct Filter<'filter> {
     paths: Vec<PathBuf>,
-    period: journal::Period,
+    periods: &'filter Vec<journal::Period>,
 }
 
-impl Filter {
+impl<'filter> Filter<'filter> {
     pub fn new() -> Self {
         Self {
             paths: Vec::new(),
-            period: journal::Period::All,
+            periods: &journal::ALL_PERIODS,
         }
     }
 
-    pub fn period(mut self, period: journal::Period) -> Self {
-        self.period = period;
+    pub fn periods(mut self, periods: &'filter Vec<journal::Period>) -> Self {
+        self.periods = periods;
         self
     }
 
@@ -57,20 +57,16 @@ impl Filter {
         let monthly_pattern = date.format("%Y-%m").to_string();
         let yearly_pattern = date.format("%Y").to_string();
 
-        let patterns = match self.period {
-            journal::Period::Daily => vec![daily_pattern],
-            journal::Period::Weekly => vec![weekly_pattern],
-            journal::Period::Monthly => vec![monthly_pattern],
-            journal::Period::Yearly => vec![yearly_pattern],
-            journal::Period::All => {
-                vec![
-                    daily_pattern,
-                    weekly_pattern,
-                    monthly_pattern,
-                    yearly_pattern,
-                ]
-            }
-        };
+        let patterns: Vec<String> = self
+            .periods
+            .iter()
+            .map(|period| match period {
+                journal::Period::Daily => daily_pattern.clone(),
+                journal::Period::Weekly => weekly_pattern.clone(),
+                journal::Period::Monthly => monthly_pattern.clone(),
+                journal::Period::Yearly => yearly_pattern.clone(),
+            })
+            .collect();
 
         let mut paths = Vec::new();
         for path in self.paths {

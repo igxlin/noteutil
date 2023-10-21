@@ -6,8 +6,8 @@ use crate::core::journal;
 
 #[derive(clap::Args, Default)]
 pub struct Args {
-    #[arg(long)]
-    period: Option<journal::Period>,
+    #[arg(short = 'p', long = "period")]
+    periods: Vec<journal::Period>,
 
     #[arg(long)]
     date: Option<String>,
@@ -21,7 +21,6 @@ pub fn run(_cli: &Cli, args: &Args) {
         .root_dir
         .clone()
         .unwrap_or(Path::new(".").to_path_buf());
-    let period = args.period.as_ref().unwrap_or(&journal::Period::All);
 
     let today = chrono::Local::now().date_naive();
     let date = match args.date.as_deref() {
@@ -29,7 +28,7 @@ pub fn run(_cli: &Cli, args: &Args) {
         None => today,
     };
 
-    for path in journal::paths(date, period, root_dir) {
+    for path in journal::paths(date, &args.periods, root_dir) {
         println!("{}", path.display());
     }
 }

@@ -12,17 +12,15 @@ pub struct Args {
     #[arg(long)]
     date: Option<String>,
 
-    #[arg(long)]
-    period: Option<journal::Period>,
+    #[arg(short = 'p', long = "period")]
+    periods: Vec<journal::Period>,
 
     path: Option<PathBuf>,
 }
 
 pub fn run(_cli: &Cli, args: &Args) {
     let path = args.path.clone().unwrap_or(Path::new(".").to_path_buf());
-    let mut note_filter = core::note::Filter::new()
-        .add(&path)
-        .period(args.period.clone().unwrap_or(journal::Period::All));
+    let mut note_filter = core::note::Filter::new().add(&path).periods(&args.periods);
 
     if args.journal_only {
         note_filter = note_filter.journal_only();
