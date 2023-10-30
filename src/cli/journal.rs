@@ -28,7 +28,7 @@ pub fn run(_cli: &Cli, args: &Args) {
         None => today,
     };
 
-    for path in journal::paths(date, &args.periods, root_dir) {
+    for path in journal::paths(date, &args.periods, root_dir, &_cli.config()) {
         println!("{}", path.display());
     }
 }
