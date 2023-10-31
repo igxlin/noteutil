@@ -6,12 +6,16 @@ use crate::core::config::Config;
 mod date;
 mod journal;
 mod list;
+mod new;
 
 #[derive(clap::Parser)]
 #[command(arg_required_else_help = true)]
 pub struct Cli {
     #[arg(long)]
     _config: Option<PathBuf>,
+
+    #[arg(long, default_value = ".")]
+    root_dir: PathBuf,
 
     #[command(subcommand)]
     command: Option<Commands>,
@@ -34,6 +38,8 @@ enum Commands {
     List(list::Args),
 
     Journal(journal::Args),
+
+    New(new::Args),
 }
 
 pub fn run() {
@@ -45,6 +51,9 @@ pub fn run() {
         }
         Some(Commands::Journal(args)) => {
             journal::run(&cli, args);
+        }
+        Some(Commands::New(args)) => {
+            new::run(&cli, args);
         }
         None => {}
     }

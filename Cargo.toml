@@ -14,5 +14,6 @@ log = "0.4.20"
 rand = "0.8.5"
 serde = { version = "1.0.188", features = ["derive"] }
 tempfile = "3.8.0"
+tera = "1.19.1"
 thiserror = "1.0.49"
 toml = "0.8.2"

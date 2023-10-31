@@ -34,3 +34,18 @@ let g:noteutil_note_dir = 'path/to/notes'
 command! NoteutilToday call noteutil#open(
                 \ 'journal --date today', {'jump': v:true})
 ```
+
+## Templates
+
+The templates should be located in `templates` folder under `root_dir`.
+
+Generate a new daily journal based on a template:
+
+```bash
+noteutil --root-dir path/to/notes new daily.md > \
+                "$(noteutil journal --period daily --date today)"
+```
+
+To get to know the format of the templates, please read [tera].
+
+[tera]: https://keats.github.io/tera/docs/#templates
