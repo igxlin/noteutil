@@ -6,8 +6,8 @@ use crate::core::config::Config;
 mod date;
 mod journal;
 mod list;
-mod new;
 mod note;
+mod template;
 
 #[derive(clap::Parser)]
 #[command(arg_required_else_help = true)]
@@ -40,7 +40,7 @@ enum Commands {
 
     Journal(journal::Args),
 
-    New(new::Args),
+    Template(template::Args),
 
     Note(note::Args),
 }
@@ -49,15 +49,9 @@ pub fn run() {
     let cli = Cli::parse();
 
     match &cli.command {
-        Some(Commands::List(args)) => {
-            list::run(&cli, args);
-        }
-        Some(Commands::Journal(args)) => {
-            journal::run(&cli, args);
-        }
-        Some(Commands::New(args)) => {
-            new::run(&cli, args);
-        }
+        Some(Commands::List(args)) => list::run(&cli, args),
+        Some(Commands::Journal(args)) => journal::run(&cli, args),
+        Some(Commands::Template(args)) => template::run(&cli, args),
         Some(Commands::Note(args)) => note::run(&cli, args),
         None => {}
     }

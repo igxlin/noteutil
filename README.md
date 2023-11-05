@@ -42,7 +42,7 @@ The templates should be located in `templates` folder under `root_dir`.
 Generate a new daily journal based on a template:
 
 ```bash
-noteutil --root-dir path/to/notes new daily.md > \
+noteutil --root-dir path/to/notes template daily.md -o \
                 "$(noteutil journal --period daily --date today)"
 ```
 

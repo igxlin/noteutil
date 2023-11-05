@@ -7,6 +7,9 @@ pub struct Args {
 
     #[arg(long)]
     root_dir: Option<PathBuf>,
+
+    #[arg(short, long)]
+    outfile: Option<PathBuf>,
 }
 
 pub fn run(_cli: &Cli, args: &Args) {
@@ -17,6 +20,16 @@ pub fn run(_cli: &Cli, args: &Args) {
         .expect("invalid template");
 
     let context = tera::Context::new();
+    let content = tera
+        .render(args.template.as_str(), &context)
+        .expect("Unable to apply template");
 
-    println!("{}", tera.render(args.template.as_str(), &context).unwrap());
+    match &args.outfile {
+        Some(outfile) => {
+            if let Err(why) = std::fs::write(outfile, content.as_bytes()) {
+                println!("Unable to write to file {}: {}", outfile.display(), why);
+            }
+        }
+        None => println!("{}", content),
+    }
 }
