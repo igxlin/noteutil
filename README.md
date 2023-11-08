@@ -13,13 +13,6 @@ or to find related journals.
 noteutil journal --period daily --date today
 ```
 
-List periodic journals:
-
-```bash
-# List weekly journal of today in directory
-noteutil ls --journal-only --date today --period weekly path/to/notes
-```
-
 ### As Vim Plugin
 
 To use with vim plugin, simply clone this repo under your

@@ -5,7 +5,6 @@ use crate::core::config::Config;
 
 mod date;
 mod journal;
-mod list;
 mod note;
 mod template;
 
@@ -35,9 +34,6 @@ impl Cli {
 
 #[derive(clap::Subcommand)]
 enum Commands {
-    #[command(name = "ls")]
-    List(list::Args),
-
     Journal(journal::Args),
 
     Template(template::Args),
@@ -49,7 +45,6 @@ pub fn run() {
     let cli = Cli::parse();
 
     match &cli.command {
-        Some(Commands::List(args)) => list::run(&cli, args),
         Some(Commands::Journal(args)) => journal::run(&cli, args),
         Some(Commands::Template(args)) => template::run(&cli, args),
         Some(Commands::Note(args)) => note::run(&cli, args),
