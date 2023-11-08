@@ -11,10 +11,12 @@ chrono = "0.4.31"
 clap = { version = "4.4.6", features = ["cargo", "derive"] }
 lazy_static = "1.4.0"
 log = "0.4.20"
+markdown = "1.0.0-alpha.14"
 pathdiff = "0.2.1"
 rand = "0.8.5"
+rayon = "1.8.0"
 serde = { version = "1.0.188", features = ["derive"] }
 tempfile = "3.8.0"
 tera = "1.19.1"
-thiserror = "1.0.49"
 toml = "0.8.2"
+walkdir = "2.4.0"

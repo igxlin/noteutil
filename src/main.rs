@@ -1,6 +1,3 @@
-mod cli;
-mod core;
-
 fn main() {
-    cli::run();
+    noteutil::cli::run();
 }

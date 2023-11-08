@@ -1,6 +1,5 @@
 use crate::cli::date;
 use crate::cli::Cli;
-use crate::core;
 use crate::core::journal;
 use std::path::{Path, PathBuf};
 
@@ -20,7 +19,7 @@ pub struct Args {
 
 pub fn run(_cli: &Cli, args: &Args) {
     let path = args.path.clone().unwrap_or(Path::new(".").to_path_buf());
-    let mut note_filter = core::note::Filter::new().add(&path).periods(&args.periods);
+    let mut note_filter = crate::note::Filter::new().add(&path).periods(&args.periods);
 
     if args.journal_only {
         note_filter = note_filter.journal_only();
