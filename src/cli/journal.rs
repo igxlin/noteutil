@@ -16,7 +16,7 @@ pub struct Args {
     root_dir: Option<PathBuf>,
 }
 
-pub fn run(_cli: &Cli, args: &Args) {
+pub fn run(ctx: crate::Context, _cli: &Cli, args: &Args) {
     let root_dir = args
         .root_dir
         .clone()
@@ -28,7 +28,7 @@ pub fn run(_cli: &Cli, args: &Args) {
         None => today,
     };
 
-    for path in journal::paths(date, &args.periods, root_dir, &_cli.config()) {
+    for path in journal::paths(ctx, date, &args.periods, root_dir, &_cli.config()) {
         println!("{}", path.display());
     }
 }

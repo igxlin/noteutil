@@ -1,3 +1,3 @@
 fn main() {
-    noteutil::cli::run();
+    noteutil::cli::run(noteutil::Context::default());
 }

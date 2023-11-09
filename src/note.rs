@@ -105,7 +105,7 @@ This is a [link title](link_url).
             note.links,
             vec![Link {
                 title: Some(String::from("link title")),
-                url: String::from("link_url"),
+                url: String::from("/tmp/link_url"),
             }]
         );
 

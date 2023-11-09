@@ -529,7 +529,6 @@ dependencies = [
  "anyhow",
  "chrono",
  "clap",
- "lazy_static",
  "log",
  "markdown",
  "pathdiff",

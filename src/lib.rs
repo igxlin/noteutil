@@ -1,4 +1,8 @@
 pub mod cli;
-pub mod core;
 pub mod note;
+
 use note::Note;
+
+mod context;
+pub use context::Context;
+mod core;

@@ -41,11 +41,11 @@ enum Commands {
     Note(note::Args),
 }
 
-pub fn run() {
+pub fn run(ctx: crate::Context) {
     let cli = Cli::parse();
 
     match &cli.command {
-        Some(Commands::Journal(args)) => journal::run(&cli, args),
+        Some(Commands::Journal(args)) => journal::run(ctx, &cli, args),
         Some(Commands::Template(args)) => template::run(&cli, args),
         Some(Commands::Note(args)) => note::run(&cli, args),
         None => {}

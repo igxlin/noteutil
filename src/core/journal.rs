@@ -11,16 +11,8 @@ pub enum Period {
     Yearly,
 }
 
-lazy_static::lazy_static! {
-    pub static ref ALL_PERIODS: Vec<Period> = vec![
-        Period::Daily,
-        Period::Weekly,
-        Period::Monthly,
-        Period::Yearly,
-    ];
-}
-
 pub fn paths(
+    ctx: crate::Context,
     date: chrono::NaiveDate,
     args_periods: &Vec<Period>,
     root_dir: PathBuf,
@@ -39,7 +31,7 @@ pub fn paths(
 
     let periods: &Vec<Period>;
     if args_periods.is_empty() {
-        periods = &ALL_PERIODS;
+        periods = &ctx.default_journal_periods;
     } else {
         periods = args_periods;
     }
@@ -74,6 +66,7 @@ mod paths_tests {
             .map(|p| Path::new(p).to_path_buf())
             .collect::<Vec<PathBuf>>(),
             paths(
+                crate::Context::default(),
                 chrono::NaiveDate::from_ymd_opt(2023, 10, 21).unwrap(),
                 &Vec::new(),
                 Path::new(".").to_path_buf(),
@@ -92,6 +85,7 @@ mod paths_tests {
                 .map(|p| Path::new(p).to_path_buf())
                 .collect::<Vec<PathBuf>>(),
             paths(
+                crate::Context::default(),
                 chrono::NaiveDate::from_ymd_opt(2023, 10, 21).unwrap(),
                 &vec![Period::Daily],
                 Path::new(".").to_path_buf(),
