@@ -55,9 +55,10 @@ pub fn paths(
 #[cfg(test)]
 mod paths_tests {
     use super::*;
+    use std::error::Error;
 
     #[test]
-    fn no_periods() -> Result<(), anyhow::Error> {
+    fn no_periods() -> Result<(), Box<dyn Error>> {
         assert_eq!(
             vec![
                 "./journals/2023-10-21.md",
@@ -80,7 +81,7 @@ mod paths_tests {
     }
 
     #[test]
-    fn one_period() -> Result<(), anyhow::Error> {
+    fn one_period() -> Result<(), Box<dyn Error>> {
         assert_eq!(
             vec!["./journals/2023-10-21.md"]
                 .iter()

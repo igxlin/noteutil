@@ -1,6 +1,7 @@
+use std::error::Error;
 use std::ops::Add;
 
-pub fn parse(date_str: &str) -> Result<chrono::NaiveDate, anyhow::Error> {
+pub fn parse(date_str: &str) -> Result<chrono::NaiveDate, Box<dyn Error>> {
     if let Ok(date) = chrono::NaiveDate::parse_from_str(date_str, "%Y-%m-%d") {
         return Ok(date);
     }
@@ -17,7 +18,7 @@ pub fn parse(date_str: &str) -> Result<chrono::NaiveDate, anyhow::Error> {
         _ => {}
     }
 
-    return Err(anyhow::anyhow!("Invalid date: {}", date_str));
+    Err(format!("Invalid date: {}", date_str))?
 }
 
 #[cfg(test)]
@@ -25,7 +26,7 @@ mod parse_tests {
     use super::*;
 
     #[test]
-    fn hardcoded_str() -> Result<(), anyhow::Error> {
+    fn hardcoded_str() -> Result<(), Box<dyn Error>> {
         let today = chrono::Local::now().date_naive();
         assert_eq!(today, parse("today").unwrap());
         assert_eq!(
@@ -41,7 +42,7 @@ mod parse_tests {
     }
 
     #[test]
-    fn rfc_date() -> Result<(), anyhow::Error> {
+    fn rfc_date() -> Result<(), Box<dyn Error>> {
         assert_eq!(
             chrono::NaiveDate::from_ymd_opt(2023, 10, 20).unwrap(),
             parse("2023-10-20").unwrap(),

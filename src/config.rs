@@ -1,3 +1,4 @@
+use std::error::Error;
 use std::path::Path;
 
 #[derive(serde::Deserialize)]
@@ -49,12 +50,12 @@ impl Default for Config {
 }
 
 impl Config {
-    pub fn from_file(path: &Path) -> Result<Self, anyhow::Error> {
+    pub fn from_file(path: &Path) -> Result<Self, Box<dyn Error>> {
         let s = std::fs::read_to_string(&path)?;
         Self::from_str(&s)
     }
 
-    pub fn from_str(s: &str) -> Result<Self, anyhow::Error> {
+    pub fn from_str(s: &str) -> Result<Self, Box<dyn Error>> {
         let config: Config = toml::from_str(&s)?;
         Ok(config)
     }
