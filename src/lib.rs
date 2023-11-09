@@ -1,9 +1,12 @@
-pub mod cli;
-mod journal;
-pub mod note;
+pub mod journal;
 
-use note::Note;
+mod note;
+pub use note::Note;
 
 mod context;
 pub use context::Context;
-mod core;
+
+mod config;
+pub use config::Config;
+
+pub mod date;

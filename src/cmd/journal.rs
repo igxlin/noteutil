@@ -1,12 +1,10 @@
 use std::path::Path;
 use std::path::PathBuf;
 
-use crate::cli::Cli;
-
 #[derive(clap::Args, Default)]
 pub struct Args {
     #[arg(short = 'p', long = "period")]
-    periods: Vec<crate::journal::Period>,
+    periods: Vec<noteutil::journal::Period>,
 
     #[arg(long)]
     date: Option<String>,
@@ -15,7 +13,7 @@ pub struct Args {
     root_dir: Option<PathBuf>,
 }
 
-pub fn run(ctx: crate::Context, _cli: &Cli, args: &Args) {
+pub fn run(ctx: &noteutil::Context, args: &Args) {
     let root_dir = args
         .root_dir
         .clone()
@@ -23,11 +21,11 @@ pub fn run(ctx: crate::Context, _cli: &Cli, args: &Args) {
 
     let today = chrono::Local::now().date_naive();
     let date = match args.date.as_deref() {
-        Some(args_date) => crate::cli::date::parse(args_date).expect("Invalid date"),
+        Some(args_date) => noteutil::date::parse(args_date).expect("Invalid date"),
         None => today,
     };
 
-    for path in crate::journal::paths(ctx, date, &args.periods, root_dir, &_cli.config()) {
+    for path in noteutil::journal::paths(ctx, date, &args.periods, root_dir) {
         println!("{}", path.display());
     }
 }

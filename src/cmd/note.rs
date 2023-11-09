@@ -2,8 +2,6 @@ use std::path::PathBuf;
 
 use rayon::prelude::*;
 
-use crate::cli::Cli;
-
 #[derive(clap::Args, Default)]
 pub struct Args {
     #[arg(long)]
@@ -13,16 +11,16 @@ pub struct Args {
     link_to: Option<PathBuf>,
 }
 
-pub fn run(_cli: &Cli, args: &Args) {
-    let walkdir_entries: Vec<walkdir::DirEntry> = walkdir::WalkDir::new(&_cli.root_dir)
+pub fn run(ctx: &noteutil::Context, args: &Args) {
+    let walkdir_entries: Vec<walkdir::DirEntry> = walkdir::WalkDir::new(&ctx.root_dir)
         .into_iter()
         .filter_map(|e| e.ok())
         .collect();
 
-    let mut notes: Vec<crate::Note> = walkdir_entries
+    let mut notes: Vec<noteutil::Note> = walkdir_entries
         .into_par_iter()
         .filter(|e| e.path().is_file() && e.path().extension().is_some_and(|ext| ext == "md"))
-        .filter_map(|e| crate::Note::build(e.path()).ok())
+        .filter_map(|e| noteutil::Note::build(e.path()).ok())
         .collect();
 
     if let Some(path) = args.link_to.as_ref() {

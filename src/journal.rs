@@ -1,8 +1,6 @@
 use std::path::Path;
 use std::path::PathBuf;
 
-use crate::core::config::Config;
-
 #[derive(Clone, Debug, clap::ValueEnum)]
 pub enum Period {
     Daily,
@@ -19,13 +17,12 @@ static ALL_JOURNAL_PERIODS: &[Period] = &[
 ];
 
 pub fn paths(
-    _ctx: crate::Context,
+    ctx: &crate::Context,
     date: chrono::NaiveDate,
     args_periods: &Vec<Period>,
     root_dir: PathBuf,
-    config: &Config,
 ) -> Vec<PathBuf> {
-    let path_format = &config.journal.path;
+    let path_format = &ctx.config.journal.path;
     let formats = [
         &path_format.daily,
         &path_format.weekly,
@@ -72,11 +69,10 @@ mod paths_tests {
             .map(|p| Path::new(p).to_path_buf())
             .collect::<Vec<PathBuf>>(),
             paths(
-                crate::Context::default(),
+                &crate::Context::default(),
                 chrono::NaiveDate::from_ymd_opt(2023, 10, 21).unwrap(),
                 &Vec::new(),
                 Path::new(".").to_path_buf(),
-                &Config::default(),
             ),
         );
 
@@ -91,11 +87,10 @@ mod paths_tests {
                 .map(|p| Path::new(p).to_path_buf())
                 .collect::<Vec<PathBuf>>(),
             paths(
-                crate::Context::default(),
+                &crate::Context::default(),
                 chrono::NaiveDate::from_ymd_opt(2023, 10, 21).unwrap(),
                 &vec![Period::Daily],
                 Path::new(".").to_path_buf(),
-                &Config::default(),
             ),
         );
         Ok(())
