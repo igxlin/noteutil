@@ -2,12 +2,11 @@ use std::path::Path;
 use std::path::PathBuf;
 
 use crate::cli::Cli;
-use crate::core::journal;
 
 #[derive(clap::Args, Default)]
 pub struct Args {
     #[arg(short = 'p', long = "period")]
-    periods: Vec<journal::Period>,
+    periods: Vec<crate::journal::Period>,
 
     #[arg(long)]
     date: Option<String>,
@@ -28,7 +27,7 @@ pub fn run(ctx: crate::Context, _cli: &Cli, args: &Args) {
         None => today,
     };
 
-    for path in journal::paths(ctx, date, &args.periods, root_dir, &_cli.config()) {
+    for path in crate::journal::paths(ctx, date, &args.periods, root_dir, &_cli.config()) {
         println!("{}", path.display());
     }
 }

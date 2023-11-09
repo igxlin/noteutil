@@ -1,4 +1,5 @@
 pub mod cli;
+mod journal;
 pub mod note;
 
 use note::Note;

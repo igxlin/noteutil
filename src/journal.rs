@@ -11,8 +11,15 @@ pub enum Period {
     Yearly,
 }
 
+static ALL_JOURNAL_PERIODS: &[Period] = &[
+    Period::Daily,
+    Period::Weekly,
+    Period::Monthly,
+    Period::Yearly,
+];
+
 pub fn paths(
-    ctx: crate::Context,
+    _ctx: crate::Context,
     date: chrono::NaiveDate,
     args_periods: &Vec<Period>,
     root_dir: PathBuf,
@@ -29,12 +36,11 @@ pub fn paths(
     let [daily_path, weekly_path, monthly_path, yearly_path] =
         formats.map(|format| date.format(format.as_str()).to_string());
 
-    let periods: &Vec<Period>;
-    if args_periods.is_empty() {
-        periods = &ctx.default_journal_periods;
+    let periods = if args_periods.is_empty() {
+        ALL_JOURNAL_PERIODS
     } else {
-        periods = args_periods;
-    }
+        args_periods.as_slice()
+    };
 
     let _paths: Vec<&str> = periods
         .iter()
