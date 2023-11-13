@@ -29,6 +29,12 @@ function! noteutil#quickfix(args) abort
     call s:quickfix_toggle()
 endfunction
 
+" Populate backlinks of current document in quickfix
+function! noteutil#backlinks() abort
+    call s:quickfix_populate(noteutil#exec(
+                \ 'note --link-to ' . expand('%:p:S')))
+endfunction
+
 " Open the first file of the command
 function! noteutil#open(cmd_args, ...) abort
     let l:cmd_args = [a:cmd_args]
