@@ -1,3 +1,4 @@
+#[derive(Clone)]
 pub struct Context {
     pub config: crate::Config,
 }

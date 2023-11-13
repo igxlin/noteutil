@@ -2,7 +2,7 @@ use std::error::Error;
 use std::path::Path;
 use std::path::PathBuf;
 
-#[derive(serde::Deserialize, Debug)]
+#[derive(serde::Deserialize, Debug, Clone)]
 #[serde(default)]
 pub struct Journal {
     pub path: JournalPath,
@@ -16,7 +16,7 @@ impl Default for Journal {
     }
 }
 
-#[derive(serde::Deserialize, Debug)]
+#[derive(serde::Deserialize, Debug, Clone)]
 #[serde(default)]
 pub struct JournalPath {
     pub daily: String,
@@ -36,7 +36,7 @@ impl Default for JournalPath {
     }
 }
 
-#[derive(serde::Deserialize, Debug)]
+#[derive(serde::Deserialize, Debug, Clone)]
 #[serde(default)]
 pub struct Config {
     pub root_dir: PathBuf,

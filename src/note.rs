@@ -3,6 +3,7 @@ use std::path::Path;
 use std::path::PathBuf;
 
 use markdown::mdast;
+use rayon::prelude::*;
 
 #[derive(Debug)]
 pub struct Note {
@@ -97,6 +98,21 @@ impl Note {
     fn is_filesystem_url(url: &str) -> bool {
         // TODO: maybe use regex to filter any $.*://
         !url.starts_with("https://") && !url.starts_with("http://")
+    }
+
+    pub fn all(root_dir: &Path) -> Vec<Note> {
+        let walkdir_entries: Vec<walkdir::DirEntry> = walkdir::WalkDir::new(&root_dir)
+            .into_iter()
+            .filter_map(|e| e.ok())
+            .collect();
+
+        let notes: Vec<Self> = walkdir_entries
+            .into_par_iter()
+            .filter(|e| e.path().is_file() && e.path().extension().is_some_and(|ext| ext == "md"))
+            .filter_map(|e| Self::build(e.path()).ok())
+            .collect();
+
+        notes
     }
 }
 

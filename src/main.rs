@@ -18,6 +18,8 @@ pub struct Cli {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
+    env_logger::init();
+
     let mut ctx = noteutil::Context::default();
     let cli = Cli::parse();
 
