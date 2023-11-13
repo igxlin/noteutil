@@ -20,7 +20,7 @@ pub fn paths(
     ctx: &crate::Context,
     date: chrono::NaiveDate,
     args_periods: &Vec<Period>,
-    root_dir: PathBuf,
+    root_dir: &PathBuf,
 ) -> Vec<PathBuf> {
     let path_format = &ctx.config.journal.path;
     let formats = [
@@ -73,7 +73,7 @@ mod paths_tests {
                 &crate::Context::default(),
                 chrono::NaiveDate::from_ymd_opt(2023, 10, 21).unwrap(),
                 &Vec::new(),
-                Path::new(".").to_path_buf(),
+                &Path::new(".").to_path_buf(),
             ),
         );
 
@@ -91,7 +91,7 @@ mod paths_tests {
                 &crate::Context::default(),
                 chrono::NaiveDate::from_ymd_opt(2023, 10, 21).unwrap(),
                 &vec![Period::Daily],
-                Path::new(".").to_path_buf(),
+                &Path::new(".").to_path_buf(),
             ),
         );
         Ok(())

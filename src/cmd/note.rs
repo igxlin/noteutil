@@ -12,7 +12,7 @@ pub struct Args {
 }
 
 pub fn run(ctx: &noteutil::Context, args: &Args) {
-    let walkdir_entries: Vec<walkdir::DirEntry> = walkdir::WalkDir::new(&ctx.root_dir)
+    let walkdir_entries: Vec<walkdir::DirEntry> = walkdir::WalkDir::new(&ctx.config.root_dir)
         .into_iter()
         .filter_map(|e| e.ok())
         .collect();

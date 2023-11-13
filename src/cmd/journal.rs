@@ -1,6 +1,3 @@
-use std::path::Path;
-use std::path::PathBuf;
-
 #[derive(clap::Args, Default)]
 pub struct Args {
     #[arg(short = 'p', long = "period")]
@@ -8,16 +5,10 @@ pub struct Args {
 
     #[arg(long)]
     date: Option<String>,
-
-    #[arg(long)]
-    root_dir: Option<PathBuf>,
 }
 
 pub fn run(ctx: &noteutil::Context, args: &Args) {
-    let root_dir = args
-        .root_dir
-        .clone()
-        .unwrap_or(Path::new(".").to_path_buf());
+    let root_dir = &ctx.config.root_dir;
 
     let today = chrono::Local::now().date_naive();
     let date = match args.date.as_deref() {

@@ -10,8 +10,8 @@ pub struct Cli {
     #[arg(long)]
     config: Option<PathBuf>,
 
-    #[arg(long, default_value = ".")]
-    root_dir: PathBuf,
+    #[arg(long)]
+    root_dir: Option<PathBuf>,
 
     #[command(subcommand)]
     command: Option<cmd::Command>,
@@ -21,12 +21,20 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut ctx = noteutil::Context::default();
     let cli = Cli::parse();
 
+    match noteutil::Config::from_default_locations() {
+        Ok(config) => ctx.config = config,
+        Err(err) => println!("Failed to load configuration: {}", err),
+    }
+
     if let Some(config_path) = cli.config {
         ctx.config = noteutil::Config::from_file(&config_path).unwrap_or_else(|_| {
             panic!("Invalid path: {:?}", config_path);
         });
     }
-    ctx.root_dir = cli.root_dir;
+
+    if let Some(root_dir) = cli.root_dir {
+        ctx.config.root_dir = root_dir;
+    }
 
     cmd::run(&ctx, &cli.command)?;
 
