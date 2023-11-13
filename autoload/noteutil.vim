@@ -1,5 +1,3 @@
-let s:note_dir = get(g:, 'noteutil_note_dir', getcwd())
-
 let s:prog = 'noteutil'
 let s:base_dir = expand('<sfile>:h:h')
 
@@ -34,9 +32,6 @@ endfunction
 " Open the first file of the command
 function! noteutil#open(cmd_args, ...) abort
     let l:cmd_args = [a:cmd_args]
-    if s:note_dir !=# ''
-        let l:cmd_args += ['--root-dir', s:note_dir]
-    endif
     let l:output = noteutil#exec(join(l:cmd_args))
 
     call s:quickfix_populate(l:output, {'jump': v:true})
