@@ -7,6 +7,7 @@ use markdown::mdast;
 #[derive(Debug)]
 pub struct Note {
     pub path: PathBuf,
+    pub title: String,
     links: Vec<Link>,
 }
 
@@ -30,6 +31,12 @@ impl Note {
     pub fn build(path: &Path) -> Result<Self, Box<dyn Error>> {
         let mut note = Self {
             path: PathBuf::from(path),
+            title: String::from(
+                path.file_name()
+                    .unwrap_or_default()
+                    .to_str()
+                    .unwrap_or_default(),
+            ),
             links: Vec::new(),
         };
         note.parse(std::fs::read_to_string(path)?.as_str())?;
@@ -41,6 +48,18 @@ impl Note {
         let node = markdown::to_mdast(content, &markdown::ParseOptions::default())?;
         self.parse_node(&node);
         Ok(())
+    }
+
+    fn parse_node(&mut self, node: &mdast::Node) {
+        match node {
+            mdast::Node::Link(link) => self.parse_link(link),
+            mdast::Node::Heading(heading) => self.parse_heading(heading),
+            _ => {}
+        }
+
+        if let Some(children) = node.children() {
+            children.iter().for_each(|node| self.parse_node(&node));
+        }
     }
 
     fn parse_link(&mut self, link: &mdast::Link) {
@@ -62,20 +81,22 @@ impl Note {
         });
     }
 
+    // TODO: Parse front matter and other as title.
+    fn parse_heading(&mut self, heading: &mdast::Heading) {
+        if heading.depth == 1 {
+            let title = heading.children.first().and_then(|node| match &node {
+                mdast::Node::Text(text) => Some(text.value.clone()),
+                _ => None,
+            });
+            if title.is_some() {
+                self.title = title.unwrap();
+            }
+        }
+    }
+
     fn is_filesystem_url(url: &str) -> bool {
         // TODO: maybe use regex to filter any $.*://
         !url.starts_with("https://") && !url.starts_with("http://")
-    }
-
-    fn parse_node(&mut self, node: &mdast::Node) {
-        match node {
-            mdast::Node::Link(link) => self.parse_link(link),
-            _ => {}
-        }
-
-        if let Some(children) = node.children() {
-            children.iter().for_each(|node| self.parse_node(&node));
-        }
     }
 }
 
@@ -108,6 +129,8 @@ This is a [link title](link_url).
                 url: String::from("/tmp/link_url"),
             }]
         );
+
+        assert_eq!(note.title, "Title");
 
         Ok(())
     }
