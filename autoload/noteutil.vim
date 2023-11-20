@@ -30,9 +30,12 @@ function! noteutil#quickfix(args) abort
 endfunction
 
 " Populate backlinks of current document in quickfix
-function! noteutil#backlinks() abort
+function! noteutil#backlinks(...) abort
+    let l:opt = extend(copy(get(a:000, 0, {})), {
+                \ 'jump': v:false,
+                \ }, 'keep')
     call s:quickfix_populate(noteutil#exec(
-                \ 'note --link-to ' . expand('%:p:S')))
+                \ 'note --link-to ' . expand('%:p:S')), l:opt)
 endfunction
 
 " Open the first file of the command
