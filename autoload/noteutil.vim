@@ -75,3 +75,44 @@ function! s:quickfix_toggle() abort
 
     execute 'cclose'
 endfunction
+
+function! s:complete_find_start()
+    let l:lnum = line('.')
+    let l:line = getline('.')
+    let b:compl_context = ''
+
+    if l:line =~# '^.*\[[^\[\]]*$'
+        let b:compl_context = 'link'
+        return matchend(l:line, '^.*\[') - 1
+    endif
+
+    return -1
+endfunction
+
+function! noteutil#complete(findstart, base)
+    if a:findstart
+        return s:complete_find_start()
+    endif
+
+    let results = []
+    if b:compl_context ==# 'link' && exists('b:compl_cached_links')
+        let results = b:compl_cached_links
+    endif
+
+    return matchfuzzy(results, a:base)
+endfunction
+
+function! noteutil#update_markdown()
+    let cmd = 'noteutil note'
+            \ . ' --format "[%(title)](%(filepath))"'
+            \ . ' --relative-to ' . expand('%:p')
+    call job_start(cmd, {'close_cb': 's:cb_update_markdown_links'})
+endfunction
+
+function! s:cb_update_markdown_links(channel)
+    let lines = []
+    while ch_canread(a:channel)
+        let lines += [ch_read(a:channel)]
+    endwhile
+    let b:compl_cached_links = lines
+endfunction

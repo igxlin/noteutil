@@ -9,6 +9,9 @@ pub struct Args {
 
     #[arg(long)]
     link_to: Option<PathBuf>,
+
+    #[arg(long, default_value = "%(filepath)")]
+    format: String,
 }
 
 pub fn run(ctx: &noteutil::Context, args: &Args) {
@@ -31,6 +34,7 @@ pub fn run(ctx: &noteutil::Context, args: &Args) {
     }
 
     for note in notes {
+        let mut filepath = note.path;
         if let Some(base_path) = args.relative_to.as_ref() {
             let base_path = if base_path.is_file() {
                 base_path.parent().unwrap()
@@ -38,17 +42,18 @@ pub fn run(ctx: &noteutil::Context, args: &Args) {
                 base_path
             };
 
-            println!(
-                "{}",
-                pathdiff::diff_paths(
-                    note.path.canonicalize().unwrap(),
-                    base_path.canonicalize().unwrap(),
-                )
-                .unwrap()
-                .display()
-            );
-        } else {
-            println!("{}", note.path.display());
+            filepath = pathdiff::diff_paths(
+                filepath.canonicalize().unwrap(),
+                base_path.canonicalize().unwrap(),
+            )
+            .unwrap();
         }
+
+        println!(
+            "{}",
+            args.format
+                .replace("%(filepath)", filepath.as_path().to_str().unwrap())
+                .replace("%(title)", note.title.as_str())
+        );
     }
 }
