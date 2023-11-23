@@ -79,10 +79,10 @@ endfunction
 function! s:complete_find_start()
     let l:lnum = line('.')
     let l:line = getline('.')
-    let b:compl_context = ''
+    let b:noteutil_compl_context = ''
 
     if l:line =~# '^.*\[[^\[\]]*$'
-        let b:compl_context = 'link'
+        let b:noteutil_compl_context = 'link'
         return matchend(l:line, '^.*\[') - 1
     endif
 
@@ -95,8 +95,8 @@ function! noteutil#complete(findstart, base)
     endif
 
     let results = []
-    if b:compl_context ==# 'link' && exists('b:compl_cached_links')
-        let results = b:compl_cached_links
+    if b:noteutil_compl_context ==# 'link' && exists('b:noteutil_compl_cached_links')
+        let results = b:noteutil_compl_cached_links
     endif
 
     return matchfuzzy(results, a:base)
@@ -106,13 +106,16 @@ function! noteutil#update_markdown()
     let cmd = 'noteutil note'
             \ . ' --format "[%(title)](%(filepath))"'
             \ . ' --relative-to ' . expand('%:p')
-    call job_start(cmd, {'close_cb': 's:cb_update_markdown_links'})
+    if !exists('b:noteutil_job_update_markdown_links')
+        let b:noteutil_job_update_markdown_links = job_start(cmd, {'close_cb': 's:cb_update_markdown_links'})
+    endif
 endfunction
 
 function! s:cb_update_markdown_links(channel)
     let lines = []
-    while ch_canread(a:channel)
+    while ch_status(a:channel, {'part': 'out'}) == 'buffered'
         let lines += [ch_read(a:channel)]
     endwhile
-    let b:compl_cached_links = lines
+    let b:noteutil_compl_cached_links = lines
+    unlet b:noteutil_job_update_markdown_links
 endfunction
