@@ -119,3 +119,23 @@ function! s:cb_update_markdown_links(channel)
     let b:noteutil_compl_cached_links = lines
     unlet b:noteutil_job_update_markdown_links
 endfunction
+
+function! noteutil#preview() abort
+    if !exists('s:job_http_server')
+        let s:job_http_server = job_start('noteutil server --http', {
+                    \ "stoponexit": "term"})
+    endif
+
+    " TODO make the port configurable
+    let url = "http://localhost:10428/pages/" . expand("%")
+    call s:open_url(url)
+endfunction
+
+function! s:open_url(url) abort
+    let open_bin = "xdg-open"
+    if has('macunix')
+        let open_bin = "open"
+    endif
+
+    call system(open_bin . " " . a:url)
+endfunction

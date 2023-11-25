@@ -1,11 +1,12 @@
 [package]
 name = "noteutil"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+anyhow = "1.0.75"
 axum = "0.6.20"
 chrono = "0.4.31"
 clap = { version = "4.4.6", features = ["derive"] }
@@ -13,13 +14,15 @@ env_logger = "0.10.1"
 futures = "0.3.29"
 log = "0.4.20"
 markdown = "1.0.0-alpha.14"
+mime_guess = "2.0.4"
 pathdiff = "0.2.1"
 rand = "0.8.5"
 rayon = "1.8.0"
 serde = { version = "1.0.188", features = ["derive"] }
 tempfile = "3.8.0"
 tera = "1.19.1"
-tokio = { version = "1.34.0", features = ["rt-multi-thread", "io-std", "macros", "sync"] }
+tokio = { version = "1.34.0", features = ["rt-multi-thread", "io-std", "macros", "sync", "fs", "io-util"] }
+tokio-util = { version = "0.7.10", features = ["io"] }
 toml = "0.8.2"
 tower-lsp = "0.20.0"
 walkdir = "2.4.0"

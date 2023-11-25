@@ -14,10 +14,10 @@ pub fn run(cx: noteutil::Context, args: &Args) -> Result<(), Box<dyn Error>> {
 
     let mut tasks = Vec::new();
     if args.lsp {
-        tasks.push(rt.spawn(noteutil::lsp::serve(cx)));
+        tasks.push(rt.spawn(noteutil::lsp::serve(cx.clone())));
     }
     if args.http {
-        tasks.push(rt.spawn(noteutil::http::Server::new().serve()));
+        tasks.push(rt.spawn(noteutil::http::serve(cx.clone())));
     }
 
     rt.block_on(async move {

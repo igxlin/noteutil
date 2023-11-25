@@ -11,8 +11,8 @@ pub use config::Config;
 
 pub mod date;
 
+mod html;
 pub mod http;
-pub use http::Server;
 
 pub mod lsp;
 pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
